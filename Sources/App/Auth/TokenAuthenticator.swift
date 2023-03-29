@@ -6,11 +6,10 @@ struct TokenAuthenticator: AsyncBearerAuthenticator {
 
     // verifies the JWT token and authenticates the corresponding user
     func authenticate(bearer: BearerAuthorization, for request: Request) async throws {
-        print("In authenticator")
         let sessionToken = try request.jwt.verify(as: SessionToken.self)
 
         if let user = try await User.find(sessionToken.userId, on: request.db) {
-             request.auth.login(user)
+            request.auth.login(user)
         }
     }
 }
@@ -18,7 +17,7 @@ struct TokenAuthenticator: AsyncBearerAuthenticator {
 // JWT payload.
 struct SessionToken: Content, Authenticatable, JWTPayload {
     // Constants
-    var expirationTime: TimeInterval = 60 * 60 * 24
+    var expirationTime: TimeInterval = 60 * 60 * 2400
 
     // Token Data
     var expiration: ExpirationClaim
@@ -26,12 +25,12 @@ struct SessionToken: Content, Authenticatable, JWTPayload {
 
     init(userId: UUID) {
         self.userId = userId
-        self.expiration = ExpirationClaim(value: Date().addingTimeInterval(expirationTime))
+        expiration = ExpirationClaim(value: Date().addingTimeInterval(expirationTime))
     }
 
     init(user: User) throws {
-        self.userId = try user.requireID()
-        self.expiration = ExpirationClaim(value: Date().addingTimeInterval(expirationTime))
+        userId = try user.requireID()
+        expiration = ExpirationClaim(value: Date().addingTimeInterval(expirationTime))
     }
 
     func verify(using signer: JWTSigner) throws {

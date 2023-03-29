@@ -6,7 +6,7 @@ struct CreateClient: AsyncMigration {
             .id()
             .field("created_at", .datetime, .required)
             .field("updated_at", .datetime)
-            .field("title", .string, .required)
+            .field("title", .string, .required, .sql(.unique))
             .field("organization_id", .uuid, .references(Organization.schema, "id"), .required)
             .field("is_billable", .bool, .required, .sql(.default(true)))
             .create()

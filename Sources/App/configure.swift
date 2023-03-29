@@ -20,7 +20,6 @@ public func configure(_ app: Application) throws {
 
     app.migrations.add(CreateUser())
     app.migrations.add(CreateOrganization())
-    app.migrations.add(CreateRole())
     app.migrations.add(CreateWorkspace())
     app.migrations.add(CreateClient())
     app.migrations.add(CreateMember())

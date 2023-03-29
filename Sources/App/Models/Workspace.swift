@@ -19,6 +19,9 @@ final class Workspace: Model {
     @Parent(key: "organization_id")
     var organization: Organization
 
+    @Parent(key: "creator_id")
+    var creator: User
+
     @Children(for: \.$workspace)
     var members: [Member]
 
@@ -30,7 +33,8 @@ final class Workspace: Model {
         createdAt: Date? = nil,
         updatedAt: Date? = nil,
         title: String,
-        organizationId: UUID,
+        organizationId: Organization.IDValue,
+        creatorId: User.IDValue,
         isBillable: Bool
     ) {
         self.id = id
@@ -38,6 +42,7 @@ final class Workspace: Model {
         self.updatedAt = updatedAt
         self.title = title
         $organization.id = organizationId
+        $creator.id = creatorId
         self.isBillable = isBillable
     }
 

@@ -19,21 +19,28 @@ final class Member: Model {
     @Parent(key: "user_id")
     var user: User
 
-    @Field(key: "role_id")
+    @Enum(key: "role")
     var role: Role
+
+    @Field(key: "is_billable")
+    var isBillable: Bool
 
     init(
         id: UUID? = nil,
         createdAt: Date? = nil,
         updatedAt: Date? = nil,
         workspaceId: UUID,
-        userId: User.IDValue
+        userId: User.IDValue,
+        role: Role,
+        isBillable: Bool
     ) {
         self.id = id
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         $workspace.id = workspaceId
         $user.id = userId
+        self.role = role
+        self.isBillable = isBillable
     }
 
     init() {}

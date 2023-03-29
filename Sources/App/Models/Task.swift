@@ -20,7 +20,7 @@ final class Task: Model {
     var project: Project
 
     @Field(key: "duration")
-    var duration: Int?
+    var duration: Int
 
     @Field(key: "description")
     var description: String
@@ -29,7 +29,7 @@ final class Task: Model {
     var startedAt: Date
 
     @Field(key: "ended_at")
-    var endedAt: Date?
+    var endedAt: Date
 
     init(
         id: UUID? = nil,
@@ -37,10 +37,10 @@ final class Task: Model {
         updatedAt: Date? = nil,
         memberId: Member.IDValue,
         projectId: Project.IDValue,
-        duration: Int?,
+        duration: Int,
         description: String,
         startedAt: Date,
-        endedAt: Date?
+        endedAt: Date
     ) {
         self.id = id
         self.createdAt = createdAt

@@ -23,7 +23,7 @@ final class Worktime: Model {
     var startedAt: Date
 
     @Field(key: "ended_at")
-    var endedAt: Date?
+    var endedAt: Date
 
     init(
         id: UUID? = nil,
@@ -32,7 +32,7 @@ final class Worktime: Model {
         memberId: Member.IDValue,
         duration: Int,
         startedAt: Date,
-        endedAt: Date?
+        endedAt: Date
     ) {
         self.id = id
         self.createdAt = createdAt

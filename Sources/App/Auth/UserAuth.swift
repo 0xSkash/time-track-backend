@@ -7,7 +7,7 @@ import Vapor
 struct UserAuth: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         // password protected
-       routes.group(User.authenticator(), User.guardMiddleware()) { password in
+        routes.group(User.authenticator(), User.guardMiddleware()) { password in
             password.post("login", use: getToken)
         }
 
