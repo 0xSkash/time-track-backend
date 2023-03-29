@@ -2,7 +2,6 @@ import Fluent
 import Vapor
 
 final class User: Model, Content {
-
     static let schema = "users"
 
     @ID(key: .id)
@@ -26,8 +25,6 @@ final class User: Model, Content {
     @Field(key: "password_hash")
     var passwordHash: String
 
-    init() {}
-
     init(
         id: UUID? = nil,
         firstName: String,
@@ -41,6 +38,8 @@ final class User: Model, Content {
         self.email = email
         self.passwordHash = passwordHash
     }
+
+    init() {}
 }
 
 extension User: ModelAuthenticatable {
@@ -50,6 +49,6 @@ extension User: ModelAuthenticatable {
     // Password verification used via AppUser.authenticator() / Basic Auth
     func verify(password: String) throws -> Bool {
         print("verify User")
-        return try Bcrypt.verify(password, created: self.passwordHash)
+        return try Bcrypt.verify(password, created: passwordHash)
     }
 }

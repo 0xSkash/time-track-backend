@@ -19,7 +19,15 @@ public func configure(_ app: Application) throws {
     ), as: .psql)
 
     app.migrations.add(CreateUser())
-
+    app.migrations.add(CreateOrganization())
+    app.migrations.add(CreateRole())
+    app.migrations.add(CreateWorkspace())
+    app.migrations.add(CreateClient())
+    app.migrations.add(CreateMember())
+    app.migrations.add(CreateProject())
+    app.migrations.add(CreateWorktime())
+    app.migrations.add(CreateTask())
+    
     // register routes
     try routes(app)
 }
