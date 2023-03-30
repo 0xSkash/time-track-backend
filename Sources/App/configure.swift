@@ -19,6 +19,7 @@ public func configure(_ app: Application) throws {
     ), as: .psql)
 
     app.migrations.add(CreateUser())
+    app.migrations.add(CreateTwoFactorToken())
     app.migrations.add(CreateOrganization())
     app.migrations.add(CreateWorkspace())
     app.migrations.add(CreateClient())

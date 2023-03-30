@@ -13,7 +13,13 @@ struct UserAuth: RouteCollection {
 
         // jwt protected
         routes.group(TokenAuthenticator()) { protected in
+
+            protected.group(TwoFactorUserAuthenticationMiddleware()) { twoFactorProtected in
+                twoFactorProtected.post("me", "disabletwofactor", use: disableTwoFactor)
+            }
             protected.get("me", use: getCurrentUser)
+            protected.get("me", "twofactortoken", use: getTwoFactorToken)
+            protected.post("me", "enabletwofactor", use: enableTwoFactor)
             protected.get("refresh", use: getToken)
         }
     }
@@ -23,10 +29,104 @@ struct UserAuth: RouteCollection {
         let payload = try SessionToken(user: user)
         let token = try req.jwt.sign(payload)
 
+        if !user.twoFactorEnabled {
+            return ClientTokenResponse(token: token)
+        }
+
+        guard let code = req.headers.first(name: "X-Auth-2FA") else {
+            throw Abort(.partialContent)
+        }
+
+        let twoFactorToken = try await UserAuth.find(for: user, on: req.db)
+
+        guard twoFactorToken.validate(code) else {
+            throw Abort(.unauthorized)
+        }
+
         return ClientTokenResponse(token: token)
     }
 
     func getCurrentUser(req: Request) async throws -> UserResponse {
         return try UserResponse(user: try req.auth.require(User.self))
+    }
+
+    func getTwoFactorToken(req: Request) async throws -> TwoFactorTokenResponse {
+        guard let user = req.auth.get(User.self) else {
+            throw Abort(.unauthorized)
+        }
+
+        if user.twoFactorEnabled {
+            let response = try await UserAuth.find(for: user, on: req.db)
+            return TwoFactorTokenResponse(twoFactorCode: response)
+        }
+
+        let token = try await user.$twoFactorToken.get(on: req.db)
+
+        if token.isEmpty {
+            let newToken = try TwoFactorToken.generate(for: user)
+            try await newToken.save(on: req.db)
+        }
+
+        let response = try await UserAuth.find(for: user, on: req.db)
+        return TwoFactorTokenResponse(twoFactorCode: response)
+    }
+
+    func enableTwoFactor(req: Request) async throws -> HTTPStatus {
+        guard let user = req.auth.get(User.self) else {
+            throw Abort(.unauthorized)
+        }
+
+        if user.twoFactorEnabled {
+            return .ok
+        }
+
+        guard let token = req.headers.first(name: "X-Auth-2FA") else {
+            throw Abort(.badRequest)
+        }
+
+        let userToken = try await UserAuth.find(for: user, on: req.db)
+
+        guard userToken.validate(token, allowBackupCode: false) else {
+            try await userToken.delete(on: req.db)
+            throw Abort(.unauthorized)
+        }
+
+        user.twoFactorEnabled = true
+        try await user.save(on: req.db)
+
+        return .ok
+    }
+
+    func disableTwoFactor(req: Request) async throws -> HTTPStatus {
+        guard let user = req.auth.get(User.self) else {
+            throw Abort(.unauthorized)
+        }
+
+        if !user.twoFactorEnabled {
+            return .ok
+        }
+
+        let userToken = try await UserAuth.find(for: user, on: req.db)
+        
+        user.twoFactorEnabled = false
+        try await userToken.delete(on: req.db)
+        try await user.save(on: req.db)
+
+        return .ok
+    }
+
+    static func find(
+        for user: User,
+        on db: Database
+    ) async throws -> TwoFactorToken {
+        guard let token = try await user.$twoFactorToken
+            .query(on: db)
+            .with(\.$user)
+            .first()
+        else {
+            throw Abort(.internalServerError, reason: "No 2FA token found")
+        }
+
+        return token
     }
 }

@@ -13,10 +13,10 @@ struct CreateUserInput: Content, Validatable {
 
     func toUser() throws -> User {
         return User(
-            firstName: self.firstName, 
-            lastName: self.lastName, 
-            email: self.email, 
-            passwordHash: try Bcrypt.hash(self.password)
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            passwordHash: try Bcrypt.hash(password)
         )
     }
 }
@@ -26,11 +26,13 @@ struct UserResponse: Content {
     let firstName: String
     let lastName: String
     let email: String
+    let twoFactorEnabled: Bool
 
     init(user: User) throws {
-        self.id = try user.requireID()
-        self.firstName = user.firstName
-        self.lastName = user.lastName
-        self.email = user.email
+        id = try user.requireID()
+        firstName = user.firstName
+        lastName = user.lastName
+        email = user.email
+        twoFactorEnabled = user.twoFactorEnabled
     }
 }

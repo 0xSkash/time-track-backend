@@ -25,18 +25,26 @@ final class User: Model, Content {
     @Field(key: "password_hash")
     var passwordHash: String
 
+    @Field(key: "two_factor_enabled")
+    var twoFactorEnabled: Bool
+
+    @Children(for: \TwoFactorToken.$user)
+    var twoFactorToken: [TwoFactorToken]
+
     init(
         id: UUID? = nil,
         firstName: String,
         lastName: String,
         email: String,
-        passwordHash: String
+        passwordHash: String,
+        twoFactorEnabled: Bool = false
     ) {
         self.id = id
         self.firstName = firstName
         self.lastName = lastName
         self.email = email
         self.passwordHash = passwordHash
+        self.twoFactorEnabled = twoFactorEnabled
     }
 
     init() {}
