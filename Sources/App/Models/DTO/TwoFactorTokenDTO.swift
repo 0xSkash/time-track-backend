@@ -22,7 +22,7 @@ struct TwoFactorTokenResponse: Content {
     }
 
     init(twoFactorCode: TwoFactorToken) {
-        let issuer = "DiningIn"
+        let issuer = "TimeTrack"
         self.init(
             backupCodes: twoFactorCode.backupTokens,
             key: twoFactorCode.key,
