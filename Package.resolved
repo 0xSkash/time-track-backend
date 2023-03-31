@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "anycodable",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Flight-School/AnyCodable",
+      "state" : {
+        "revision" : "862808b2070cd908cb04f9aafe7de83d35f81b05",
+        "version" : "0.6.7"
+      }
+    },
+    {
       "identity" : "async-http-client",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swift-server/async-http-client.git",
@@ -232,6 +241,15 @@
       "state" : {
         "revision" : "0a5bc04095a675662cf24757cc0640aa2204253b",
         "version" : "1.0.2"
+      }
+    },
+    {
+      "identity" : "swiftgger",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mczachurski/Swiftgger.git",
+      "state" : {
+        "revision" : "afd6e6ccd9e7200484f0eda30aa5781125e7585f",
+        "version" : "2.0.0-rc2"
       }
     },
     {

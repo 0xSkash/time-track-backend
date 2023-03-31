@@ -21,6 +21,10 @@ final class Organization: Model {
 
     @Children(for: \.$organization)
     var workspaces: [Workspace]
+    
+    
+    @Siblings(through: OrganizationUser.self, from: \.$organization, to: \.$user)
+    public var users: [User]
 
     init(
         id: UUID? = nil,

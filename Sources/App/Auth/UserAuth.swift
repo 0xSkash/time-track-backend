@@ -15,11 +15,11 @@ struct UserAuth: RouteCollection {
         routes.group(TokenAuthenticator()) { protected in
 
             protected.group(TwoFactorUserAuthenticationMiddleware()) { twoFactorProtected in
-                twoFactorProtected.post("me", "disabletwofactor", use: disableTwoFactor)
+                twoFactorProtected.post("me", "disable-two-factor", use: disableTwoFactor)
             }
             protected.get("me", use: getCurrentUser)
-            protected.get("me", "twofactortoken", use: getTwoFactorToken)
-            protected.post("me", "enabletwofactor", use: enableTwoFactor)
+            protected.get("me", "two-factor-token", use: getTwoFactorToken)
+            protected.post("me", "enable-two-factor", use: enableTwoFactor)
             protected.get("refresh", use: getToken)
         }
     }

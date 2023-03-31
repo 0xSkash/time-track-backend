@@ -15,7 +15,6 @@ struct ProjectController: RouteCollection {
         return try await Project.query(on: req.db)
             .filter(\.$workspace.$id == workspace.requireID())
             .with(\.$client)
-            .with(\.$creator)
             .all()
             .map { project in
                 ProjectResponse(
@@ -37,21 +36,12 @@ struct ProjectController: RouteCollection {
             throw Abort(.unauthorized)
         }
 
-        guard let member = try await Member.query(on: req.db)
-            .filter(\.$user.$id == user.requireID())
-            .filter(\.$workspace.$id == workspace.requireID())
-            .first()
-        else {
-            throw Abort(.badRequest)
-        }
+        let member = try await Member.find(for: user, in: workspace, on: req.db)
 
         let project = projectData.toProject(workspaceId: try workspace.requireID(), creator: try member.requireID())
 
         try await project.save(on: req.db)
-
         try await project.$client.load(on: req.db)
-        try await project.$creator.load(on: req.db)
-        try await workspace.$organization.load(on: req.db)
 
         return ProjectResponse(
             project: project

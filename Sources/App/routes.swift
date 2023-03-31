@@ -35,12 +35,14 @@ func routes(_ app: Application) throws {
                         try memberProtected.group(":workspaceId", "tasks") { tasks in
                             try tasks.register(collection: TaskController())
                         }
+                        
+                        try memberProtected.group(":workspaceId", "clients") { clients in
+                            try clients.register(collection: ClientController())
+                        }
                     }
                 }
 
-                try organizations.group(":organizationId", "clients") { clients in
-                    try clients.register(collection: ClientController())
-                }
+                
             }
         }
     }

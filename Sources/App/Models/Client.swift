@@ -16,8 +16,8 @@ final class Client: Model {
     @Field(key: "title")
     var title: String
 
-    @Parent(key: "organization_id")
-    var organization: Organization
+    @Parent(key: "workspace_id")
+    var workspace: Workspace
 
     @Field(key: "is_billable")
     var isBillable: Bool
@@ -27,14 +27,14 @@ final class Client: Model {
         createdAt: Date? = nil,
         updatedAt: Date? = nil,
         title: String,
-        organizationId: Organization.IDValue,
+        workspaceId: Workspace.IDValue,
         isBillable: Bool
     ) {
         self.id = id
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.title = title
-        $organization.id = organizationId
+        $workspace.id = workspaceId
         self.isBillable = isBillable
     }
 

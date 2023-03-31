@@ -10,12 +10,12 @@ struct ClientController: RouteCollection {
     }
 
     func index(req: Request) async throws -> [ClientResponse] {
-        guard let organization = try await Organization.find(req.parameters.get("organizationId"), on: req.db) else {
+        guard let workspace = try await Workspace.find(req.parameters.get("workspaceId"), on: req.db) else {
             throw Abort(.badRequest)
         }
 
         return try await Client.query(on: req.db)
-            .filter(\.$organization.$id == organization.requireID())
+            .filter(\.$workspace.$id == workspace.requireID())
             .all()
             .map { client in
                 ClientResponse(client: client)
@@ -27,11 +27,11 @@ struct ClientController: RouteCollection {
 
         let clientData = try req.content.decode(CreateClientInput.self)
 
-        guard let organization = try await Organization.find(req.parameters.get("organizationId"), on: req.db) else {
+        guard let workspace = try await Workspace.find(req.parameters.get("workspaceId"), on: req.db) else {
             throw Abort(.badRequest)
         }
 
-        let client = try clientData.toClient(organization: organization.requireID())
+        let client = try clientData.toClient(workspaceId: workspace.requireID())
         
         try await client.save(on: req.db)
         

@@ -9,8 +9,8 @@ struct CreateClientInput: Content, Validatable {
         validations.add("isBillable", as: Bool.self)
     }
 
-    func toClient(organization: Organization.IDValue) -> Client {
-        return Client(title: title, organizationId: organization, isBillable: isBillable)
+    func toClient(workspaceId: Workspace.IDValue) -> Client {
+        return Client(title: title, workspaceId: workspaceId, isBillable: isBillable)
     }
 }
 

@@ -17,7 +17,7 @@ struct MemberMiddleware: AsyncMiddleware {
             .first()
 
         if member == nil {
-            throw Abort(.badRequest)
+            throw Abort(.unauthorized)
         }
 
         return try await next.respond(to: request)

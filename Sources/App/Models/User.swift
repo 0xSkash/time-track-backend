@@ -31,6 +31,9 @@ final class User: Model, Content {
     @Children(for: \TwoFactorToken.$user)
     var twoFactorToken: [TwoFactorToken]
 
+    @Siblings(through: OrganizationUser.self, from: \.$user, to: \.$organization)
+    public var organizations: [Organization]
+
     init(
         id: UUID? = nil,
         firstName: String,

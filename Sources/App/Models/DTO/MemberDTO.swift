@@ -37,3 +37,13 @@ struct MemberResponse: Content {
         }
     }
 }
+
+struct MemberListResponse: Content {
+    let id: UUID
+    let role: Role
+
+    init(member: Member) throws {
+        id = try member.requireID()
+        role = member.role
+    }
+}
