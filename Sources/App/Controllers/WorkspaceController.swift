@@ -4,7 +4,7 @@ import Vapor
 struct WorkspaceController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         routes.post("", use: create)
-        routes.get(":workspaceId", "team-members", use: indexTeamMembers)
+        routes.get(Workspace.parameterDefinition(), "team-members", use: indexTeamMembers)
         routes.get("", use: indexForOrganization)
     }
 
@@ -52,9 +52,7 @@ struct WorkspaceController: RouteCollection {
     }
 
     func indexTeamMembers(req: Request) async throws -> [MemberListResponse] {
-        guard let workspace = try await Workspace.find(req.parameters.get("workspaceId"), on: req.db) else {
-            throw Abort(.notAcceptable)
-        }
+        let workspace = try await Workspace.find(req: req)
 
         try await workspace.$members.load(on: req.db)
 

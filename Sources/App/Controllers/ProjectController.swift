@@ -8,9 +8,7 @@ struct ProjectController: RouteCollection {
     }
 
     func index(req: Request) async throws -> [ProjectResponse] {
-        guard let workspace = try await Workspace.find(req.parameters.get("workspaceId"), on: req.db) else {
-            throw Abort(.badRequest)
-        }
+        let workspace = try await Workspace.find(req: req)
 
         return try await Project.query(on: req.db)
             .filter(\.$workspace.$id == workspace.requireID())
@@ -26,9 +24,7 @@ struct ProjectController: RouteCollection {
     func create(req: Request) async throws -> ProjectResponse {
         let projectData = try req.validateAndDecode(CreateProjectInput.self)
 
-        guard let workspace = try await Workspace.find(req.parameters.get("workspaceId"), on: req.db) else {
-            throw Abort(.badRequest)
-        }
+        let workspace = try await Workspace.find(req: req)
 
         guard let user = req.auth.get(User.self) else {
             throw Abort(.unauthorized)

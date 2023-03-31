@@ -48,3 +48,11 @@ final class Workspace: Model {
 
     init() {}
 }
+
+extension Workspace: UsableParameter {
+    typealias ModelType = Workspace
+    
+    static func parameterName() -> String {
+        "workspaceId"
+    }
+}

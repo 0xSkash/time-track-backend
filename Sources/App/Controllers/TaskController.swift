@@ -16,9 +16,7 @@ struct TaskController: RouteCollection {
             throw Abort(.unauthorized)
         }
 
-        guard let workspace = try await Workspace.find(req.parameters.get("workspaceId"), on: req.db) else {
-            throw Abort(.badRequest)
-        }
+        let workspace = try await Workspace.find(req: req)
 
         guard let selfMember = try await Member.query(on: req.db)
             .filter(\.$user.$id == user.requireID())
@@ -46,9 +44,7 @@ struct TaskController: RouteCollection {
     func create(req: Request) async throws -> TaskResponse {
         let taskData = try req.validateAndDecode(CreateTaskInput.self)
 
-        guard let workspace = try await Workspace.find(req.parameters.get("workspaceId"), on: req.db) else {
-            throw Abort(.badRequest)
-        }
+        let workspace = try await Workspace.find(req: req)
 
         guard let user = req.auth.get(User.self) else {
             throw Abort(.unauthorized)

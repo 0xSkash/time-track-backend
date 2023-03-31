@@ -11,9 +11,7 @@ struct MemberController: RouteCollection {
     }
 
     func index(req: Request) async throws -> [MemberResponse] {
-        guard let workspace = try await Workspace.find(req.parameters.get("workspaceId"), on: req.db) else {
-            throw Abort(.badRequest)
-        }
+        let workspace = try await Workspace.find(req: req)
 
         return try await Member.query(on: req.db)
             .filter(\.$workspace.$id == workspace.requireID())
@@ -31,9 +29,7 @@ struct MemberController: RouteCollection {
             throw Abort(.badRequest)
         }
 
-        guard let workspace = try await Workspace.find(req.parameters.get("workspaceId"), on: req.db) else {
-            throw Abort(.badRequest)
-        }
+        let workspace = try await Workspace.find(req: req)
 
         let existingMember = try await Member.query(on: req.db)
             .filter(\.$user.$id == user.requireID())

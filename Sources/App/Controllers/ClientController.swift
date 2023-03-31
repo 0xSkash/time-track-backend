@@ -10,9 +10,7 @@ struct ClientController: RouteCollection {
     }
 
     func index(req: Request) async throws -> [ClientResponse] {
-        guard let workspace = try await Workspace.find(req.parameters.get("workspaceId"), on: req.db) else {
-            throw Abort(.badRequest)
-        }
+        let workspace = try await Workspace.find(req: req)
 
         return try await Client.query(on: req.db)
             .filter(\.$workspace.$id == workspace.requireID())
@@ -25,9 +23,7 @@ struct ClientController: RouteCollection {
     func create(req: Request) async throws -> ClientResponse {
         let clientData = try req.validateAndDecode(CreateClientInput.self)
 
-        guard let workspace = try await Workspace.find(req.parameters.get("workspaceId"), on: req.db) else {
-            throw Abort(.badRequest)
-        }
+        let workspace = try await Workspace.find(req: req)
 
         let client = try clientData.toClient(workspaceId: workspace.requireID())
         
