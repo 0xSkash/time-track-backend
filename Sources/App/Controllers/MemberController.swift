@@ -25,13 +25,9 @@ struct MemberController: RouteCollection {
     }
 
     func create(req: Request) async throws -> MemberResponse {
-        print("In member creation")
-        try CreateMemberInput.validate(content: req)
-
-        let memberData = try req.content.decode(CreateMemberInput.self)
+        let memberData = try req.validateAndDecode(CreateMemberInput.self)
 
         guard let user = try await User.find(memberData.userId, on: req.db) else {
-            print("User not found")
             throw Abort(.badRequest)
         }
 

@@ -10,8 +10,7 @@ struct OrganizationController: RouteCollection {
     }
 
     func create(req: Request) async throws -> OrganizationResponse {
-        try CreateOrganizationInput.validate(content: req)
-        let organizaztionData = try req.content.decode(CreateOrganizationInput.self)
+        let organizaztionData = try req.validateAndDecode(CreateOrganizationInput.self)
 
         guard let user = req.auth.get(User.self) else {
             throw Abort(.unauthorized)

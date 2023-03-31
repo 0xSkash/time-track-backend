@@ -11,9 +11,11 @@ extension OpenAPIBuilder {
 }
 
 extension ClientResponse {
-    static func modelDocs() -> APIObject<ClientResponse> {
+    fileprivate static func modelDocs() -> APIObject<ClientResponse> {
         let model = ClientResponse(client: Client(
-            title: "Example Title", workspaceId: UUID(uuidString: "d0a1d3c1-48bf-4c23-93d8-f6b6496f7c96")!, isBillable: true
+            title: "Example Title",
+            workspaceId: UUID.generateRandom(),
+            isBillable: true
         ))
 
         return APIObject(object: model)
@@ -21,7 +23,7 @@ extension ClientResponse {
 }
 
 extension ClientController {
-    static func modelDocs() -> APIController {
+    fileprivate static func modelDocs() -> APIController {
         return APIController(
             name: "Client",
             description: "Fetching and creating of clients per workspace",

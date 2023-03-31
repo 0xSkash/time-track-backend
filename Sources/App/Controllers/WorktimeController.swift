@@ -41,8 +41,7 @@ struct WorktimeController: RouteCollection {
     }
 
     func create(req: Request) async throws -> WorktimeResponse {
-        try CreateWorktimeInput.validate(content: req)
-        let worktimeData = try req.content.decode(CreateWorktimeInput.self)
+        let worktimeData = try req.validateAndDecode(CreateWorktimeInput.self)
 
         guard let workspace = try await Workspace.find(req.parameters.get("workspaceId"), on: req.db) else {
             throw Abort(.badRequest)

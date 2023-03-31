@@ -9,8 +9,7 @@ struct WorkspaceController: RouteCollection {
     }
 
     func create(req: Request) async throws -> WorkspaceResponse {
-        try CreateWorkspaceInput.validate(content: req)
-        let workspaceData = try req.content.decode(CreateWorkspaceInput.self)
+        let workspaceData = try req.validateAndDecode(CreateWorkspaceInput.self)
 
         guard let user = req.auth.get(User.self) else {
             throw Abort(.unauthorized)

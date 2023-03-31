@@ -6,6 +6,7 @@ struct OpenAPIGenerator: Command {
 
     static let outputFileName = "openapi"
     static let outputFilePathExtension = "json"
+    static let outputDirectory = FileManager.default.currentDirectoryPath
 
     var help: String {
         "Generates OpenAPI Docs JSON File"
@@ -41,11 +42,10 @@ struct OpenAPIGenerator: Command {
         let jsonOptionalString = String(bytes: jsonData, encoding: .utf8)
 
         let jsonString = jsonOptionalString ?? "empty"
-        let fileName = OpenAPIGenerator.outputFileName
 
-        let dir = FileManager.default.currentDirectoryPath
-
-        let fileURL = URL(fileURLWithPath: dir).appendingPathComponent(fileName).appendingPathExtension(OpenAPIGenerator.outputFilePathExtension)
+        let fileURL = URL(fileURLWithPath: OpenAPIGenerator.outputDirectory)
+            .appendingPathComponent(OpenAPIGenerator.outputFileName)
+            .appendingPathExtension(OpenAPIGenerator.outputFilePathExtension)
 
         try jsonString.write(to: fileURL, atomically: true, encoding: String.Encoding.utf8)
 

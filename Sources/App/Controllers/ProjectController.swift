@@ -24,9 +24,7 @@ struct ProjectController: RouteCollection {
     }
 
     func create(req: Request) async throws -> ProjectResponse {
-        try CreateProjectInput.validate(content: req)
-
-        let projectData = try req.content.decode(CreateProjectInput.self)
+        let projectData = try req.validateAndDecode(CreateProjectInput.self)
 
         guard let workspace = try await Workspace.find(req.parameters.get("workspaceId"), on: req.db) else {
             throw Abort(.badRequest)

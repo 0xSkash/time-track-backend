@@ -11,9 +11,7 @@ struct UserController: RouteCollection {
     }
 
     func create(req: Request) async throws -> UserResponse {
-        try CreateUserInput.validate(content: req)
-
-        let userData = try req.content.decode(CreateUserInput.self)
+        let userData = try req.validateAndDecode(CreateUserInput.self)
 
         guard let user = try? userData.toUser() else {
             throw Abort(.notAcceptable)

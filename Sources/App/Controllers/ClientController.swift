@@ -23,9 +23,7 @@ struct ClientController: RouteCollection {
     }
 
     func create(req: Request) async throws -> ClientResponse {
-        try CreateClientInput.validate(content: req)
-
-        let clientData = try req.content.decode(CreateClientInput.self)
+        let clientData = try req.validateAndDecode(CreateClientInput.self)
 
         guard let workspace = try await Workspace.find(req.parameters.get("workspaceId"), on: req.db) else {
             throw Abort(.badRequest)

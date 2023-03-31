@@ -44,8 +44,7 @@ struct TaskController: RouteCollection {
     }
 
     func create(req: Request) async throws -> TaskResponse {
-        try CreateTaskInput.validate(content: req)
-        let taskData = try req.content.decode(CreateTaskInput.self)
+        let taskData = try req.validateAndDecode(CreateTaskInput.self)
 
         guard let workspace = try await Workspace.find(req.parameters.get("workspaceId"), on: req.db) else {
             throw Abort(.badRequest)
