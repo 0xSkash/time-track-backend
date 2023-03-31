@@ -1,0 +1,173 @@
+{
+  "paths" : {
+    "\/organizations\/{organizationId}\/workspaces\/{workspaceId}\/clients" : {
+      "get" : {
+        "parameters" : [
+          {
+            "schema" : {
+              "type" : "string"
+            },
+            "in" : "header",
+            "allowEmptyValue" : false,
+            "deprecated" : false,
+            "description" : "Bearer Token used to authenticate user",
+            "required" : true,
+            "name" : "Authorization"
+          },
+          {
+            "schema" : {
+              "type" : "string",
+              "format" : "uuid"
+            },
+            "allowEmptyValue" : false,
+            "in" : "path",
+            "name" : "organizationId",
+            "required" : true,
+            "deprecated" : false
+          },
+          {
+            "schema" : {
+              "type" : "string",
+              "format" : "uuid"
+            },
+            "allowEmptyValue" : false,
+            "in" : "path",
+            "name" : "workspaceId",
+            "required" : true,
+            "deprecated" : false
+          }
+        ],
+        "tags" : [
+          "Client"
+        ],
+        "deprecated" : false,
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application\/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#\/components\/schemas\/ClientResponse"
+                  }
+                }
+              }
+            },
+            "description" : "List of Clients of the specified workspace"
+          },
+          "400" : {
+            "description" : "Workspace does not exist"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          }
+        },
+        "description" : "Endpoint for Client fetching",
+        "summary" : "Returns all Clients who belong to the specified workspace"
+      },
+      "post" : {
+        "parameters" : [
+          {
+            "schema" : {
+              "type" : "string"
+            },
+            "in" : "header",
+            "allowEmptyValue" : false,
+            "deprecated" : false,
+            "description" : "Bearer Token used to authenticate user",
+            "required" : true,
+            "name" : "Authorization"
+          },
+          {
+            "schema" : {
+              "type" : "string",
+              "format" : "uuid"
+            },
+            "allowEmptyValue" : false,
+            "in" : "path",
+            "name" : "organizationId",
+            "required" : true,
+            "deprecated" : false
+          },
+          {
+            "schema" : {
+              "type" : "string",
+              "format" : "uuid"
+            },
+            "allowEmptyValue" : false,
+            "in" : "path",
+            "name" : "workspaceId",
+            "required" : true,
+            "deprecated" : false
+          }
+        ],
+        "tags" : [
+          "Client"
+        ],
+        "deprecated" : false,
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application\/json" : {
+                "schema" : {
+                  "$ref" : "#\/components\/schemas\/ClientResponse"
+                }
+              }
+            },
+            "description" : "The created client"
+          },
+          "400" : {
+            "description" : "Workspace does not exist"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          }
+        },
+        "description" : "Endpoint for Client Creation",
+        "summary" : "Creates a client for the specified workspace"
+      }
+    }
+  },
+  "servers" : [
+
+  ],
+  "openapi" : "3.0.1",
+  "info" : {
+    "contact" : {
+      "name" : "Skash",
+      "url" : "https:\/\/github.com\/0xSkash"
+    },
+    "title" : "Time Track API Docs",
+    "description" : "API Docs for the Time Track Backend",
+    "version" : "1.0.0"
+  },
+  "tags" : [
+    {
+      "name" : "Client",
+      "description" : "Fetching and creating of clients per workspace"
+    }
+  ],
+  "components" : {
+    "schemas" : {
+      "ClientResponse" : {
+        "type" : "object",
+        "properties" : {
+          "title" : {
+            "type" : "string",
+            "example" : "Example Title"
+          },
+          "isBillable" : {
+            "type" : "boolean",
+            "example" : true
+          }
+        },
+        "required" : [
+
+        ]
+      }
+    },
+    "securitySchemes" : {
+
+    }
+  }
+}

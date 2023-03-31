@@ -29,6 +29,8 @@ public func configure(_ app: Application) throws {
     app.migrations.add(CreateTask())
     app.migrations.add(CreateOrganizationUser())
     
+    app.commands.use(OpenAPIGenerator(), as: "api-gen")
+    
     // register routes
     try routes(app)
 }
