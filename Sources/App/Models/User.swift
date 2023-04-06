@@ -63,3 +63,11 @@ extension User: ModelAuthenticatable {
         return try Bcrypt.verify(password, created: passwordHash)
     }
 }
+
+extension User: PathParameter {
+    typealias ModelType = User
+    
+    static func parameterName() -> String {
+        return "userId"
+    }
+}

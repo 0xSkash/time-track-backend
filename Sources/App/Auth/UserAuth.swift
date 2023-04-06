@@ -30,11 +30,11 @@ struct UserAuth: RouteCollection {
         let token = try req.jwt.sign(payload)
 
         if !user.twoFactorEnabled {
-            return ClientTokenResponse(token: token)
+            return ClientTokenResponse(token: token, userId: try user.requireID())
         }
 
         guard let code = req.headers.first(name: "X-Auth-2FA") else {
-            throw Abort(.partialContent)
+            throw Abort(HTTPStatus(statusCode: 449))
         }
 
         let twoFactorToken = try await UserAuth.find(for: user, on: req.db)
@@ -43,11 +43,11 @@ struct UserAuth: RouteCollection {
             throw Abort(.unauthorized)
         }
 
-        return ClientTokenResponse(token: token)
+        return ClientTokenResponse(token: token, userId: try user.requireID())
     }
 
     func getCurrentUser(req: Request) async throws -> UserResponse {
-        return try UserResponse(user: try req.auth.require(User.self))
+        return UserResponse(user: try req.auth.require(User.self))
     }
 
     func getTwoFactorToken(req: Request) async throws -> TwoFactorTokenResponse {

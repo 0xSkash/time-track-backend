@@ -15,9 +15,7 @@ struct WorkspaceController: RouteCollection {
             throw Abort(.unauthorized)
         }
 
-        guard let organization = try await Organization.find(req.parameters.get("organizationId"), on: req.db) else {
-            throw Abort(.notAcceptable)
-        }
+        let organization = try await Organization.find(req: req)
 
         guard let workspace = try? workspaceData.toWorkspace(organization: organization, creator: user) else {
             throw Abort(.notAcceptable)
@@ -36,19 +34,16 @@ struct WorkspaceController: RouteCollection {
             throw Abort(.unauthorized)
         }
 
-        guard let organization = try await Organization.find(req.parameters.get("organizationId"), on: req.db) else {
-            throw Abort(.notAcceptable)
-        }
+        let organization = try await Organization.find(req: req)
 
-        let workspaces = try await Workspace.query(on: req.db)
+        return try await Workspace.query(on: req.db)
             .filter(\.$organization.$id == organization.requireID())
             .join(Member.self, on: \Member.$workspace.$id == \Workspace.$id)
             .filter(Member.self, \.$user.$id == user.requireID())
             .all()
-
-        return try workspaces.map { ws in
-            try WorkspaceResponse(workspace: ws)
-        }
+            .map { ws in
+                try WorkspaceResponse(workspace: ws)
+            }
     }
 
     func indexTeamMembers(req: Request) async throws -> [MemberListResponse] {

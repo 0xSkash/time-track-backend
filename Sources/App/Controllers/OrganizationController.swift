@@ -5,7 +5,12 @@ struct OrganizationController: RouteCollection {
         routes.post("", use: create)
 
         routes.group(TokenAuthenticator()) { protected in
-            protected.post(":organizationId", "invite-user", ":userId", use: inviteUser)
+            protected.post(
+                Organization.parameterDefinition(),
+                "invite-user",
+                User.parameterDefinition(),
+                use: inviteUser
+            )
         }
     }
 
@@ -32,17 +37,13 @@ struct OrganizationController: RouteCollection {
             throw Abort(.unauthorized)
         }
 
-        guard let organization = try await Organization.find(req.parameters.get("organizationId"), on: req.db) else {
-            throw Abort(.badRequest)
-        }
+        let organization = try await Organization.find(req: req)
 
         if organization.$owner.id != user.id {
             throw Abort(.unauthorized)
         }
 
-        guard let userToInvite = try await User.find(req.parameters.get("userId"), on: req.db) else {
-            throw Abort(.badRequest)
-        }
+        let userToInvite = try await User.find(req: req)
 
         try await organization.$users.attach(userToInvite, on: req.db)
 

@@ -42,3 +42,11 @@ final class Organization: Model {
 
     init() {}
 }
+
+extension Organization: PathParameter {
+    typealias ModelType = Organization
+    
+    static func parameterName() -> String {
+        return "organizationId"
+    }
+}

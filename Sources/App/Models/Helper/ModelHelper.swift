@@ -1,13 +1,14 @@
 import FluentKit
+import Swiftgger
 import Vapor
 
-protocol UsableParameter {
-    associatedtype ModelType: Model & UsableParameter where ModelType.IDValue: LosslessStringConvertible
+protocol PathParameter {
+    associatedtype ModelType: Model & PathParameter where ModelType.IDValue: LosslessStringConvertible
 
     static func parameterName() -> String
 }
 
-extension UsableParameter {
+extension PathParameter {
     static func parameterDefinition() -> PathComponent {
         return ":\(parameterName())"
     }
@@ -21,5 +22,15 @@ extension UsableParameter {
         }
 
         return model
+    }
+
+    static func parameterDocs(required: Bool = true) -> APIParameter {
+        APIParameter(
+            name: ModelType.parameterName(),
+            parameterLocation: .path,
+            required: required,
+            allowEmptyValue: false,
+            dataType: .uuid
+        )
     }
 }

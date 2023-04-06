@@ -22,14 +22,14 @@ struct CreateUserInput: Content, Validatable {
 }
 
 struct UserResponse: Content {
-    let id: UUID
+    let id: UUID?
     let firstName: String
     let lastName: String
     let email: String
     let twoFactorEnabled: Bool
 
-    init(user: User) throws {
-        id = try user.requireID()
+    init(user: User) {
+        id = user.id
         firstName = user.firstName
         lastName = user.lastName
         email = user.email

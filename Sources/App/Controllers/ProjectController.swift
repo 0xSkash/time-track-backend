@@ -30,9 +30,14 @@ struct ProjectController: RouteCollection {
             throw Abort(.unauthorized)
         }
 
-        let member = try await Member.find(for: user, in: workspace, on: req.db)
+        guard let member = try await Member.find(for: user, in: workspace.requireID(), on: req.db) else {
+            throw Abort(.badRequest)
+        }
 
-        let project = projectData.toProject(workspaceId: try workspace.requireID(), creator: try member.requireID())
+        let project = projectData.toProject(
+            workspaceId: try workspace.requireID(),
+            creator: try member.requireID()
+        )
 
         try await project.save(on: req.db)
         try await project.$client.load(on: req.db)

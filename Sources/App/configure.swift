@@ -31,6 +31,8 @@ public func configure(_ app: Application) throws {
     
     app.commands.use(OpenAPIGenerator(), as: "api-gen")
     
+    app.http.server.configuration.address = BindAddress.hostname("0.0.0.0", port: 8080)
+    
     // register routes
     try routes(app)
 }

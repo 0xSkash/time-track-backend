@@ -4,27 +4,19 @@ import Vapor
 struct WorktimeController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         routes.post("", use: create)
-        routes.get(":memberId", use: index)
+        routes.get(Member.parameterDefinition(), use: index)
     }
 
     func index(req: Request) async throws -> [WorktimeResponse] {
-        guard let member = try await Member.find(req.parameters.get("memberId"), on: req.db) else {
-            throw Abort(.badRequest)
-        }
+        let member = try await Member.find(req: req)
 
         guard let user = req.auth.get(User.self) else {
             throw Abort(.unauthorized)
         }
 
-        guard let workspace = try await Workspace.find(req.parameters.get("workspaceId"), on: req.db) else {
-            throw Abort(.badRequest)
-        }
+        let workspace = try await Workspace.find(req: req)
 
-        guard let selfMember = try await Member.query(on: req.db)
-            .filter(\.$user.$id == user.requireID())
-            .filter(\.$workspace.$id == workspace.requireID())
-            .first()
-        else {
+        guard let selfMember = try await Member.find(for: user, in: workspace.requireID(), on: req.db) else {
             throw Abort(.badRequest)
         }
 
@@ -49,11 +41,7 @@ struct WorktimeController: RouteCollection {
             throw Abort(.unauthorized)
         }
 
-        guard let member = try await Member.query(on: req.db)
-            .filter(\.$user.$id == user.requireID())
-            .filter(\.$workspace.$id == workspace.requireID())
-            .first()
-        else {
+        guard let member = try await Member.find(for: user, in: workspace.requireID(), on: req.db) else {
             throw Abort(.badRequest)
         }
 

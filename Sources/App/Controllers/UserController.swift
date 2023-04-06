@@ -12,7 +12,7 @@ struct UserController: RouteCollection {
 
     func create(req: Request) async throws -> UserResponse {
         let userData = try req.validateAndDecode(CreateUserInput.self)
-
+        
         guard let user = try? userData.toUser() else {
             throw Abort(.notAcceptable)
         }

@@ -2,15 +2,10 @@ import FluentKit
 import Vapor
 
 extension Member {
-    static func find(for user: User, in workspace: Workspace, on db: Database) async throws -> Member {
-        guard let member = try await Member.query(on: db)
+    static func find(for user: User, in workspaceId: Workspace.IDValue, on db: Database) async throws -> Member? {
+        return try await Member.query(on: db)
             .filter(\.$user.$id == user.requireID())
-            .filter(\.$workspace.$id == workspace.requireID())
+            .filter(\.$workspace.$id == workspaceId)
             .first()
-        else {
-            throw Abort(.unauthorized)
-        }
-
-        return member
     }
 }

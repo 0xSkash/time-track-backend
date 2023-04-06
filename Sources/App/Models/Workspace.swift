@@ -49,7 +49,7 @@ final class Workspace: Model {
     init() {}
 }
 
-extension Workspace: UsableParameter {
+extension Workspace: PathParameter {
     typealias ModelType = Workspace
     
     static func parameterName() -> String {

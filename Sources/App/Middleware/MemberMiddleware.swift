@@ -19,7 +19,7 @@ struct MemberMiddleware: AsyncMiddleware {
         if member == nil {
             throw Abort(.unauthorized)
         }
-
+        
         return try await next.respond(to: request)
     }
 }

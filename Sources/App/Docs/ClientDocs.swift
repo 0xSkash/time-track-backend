@@ -37,13 +37,13 @@ extension ClientController {
     private static func indexDocs() -> APIAction {
         return APIAction(
             method: .get,
-            route: "/organizations/{organizationId}/workspaces/{workspaceId}/clients",
+            route: "/organizations/{\(Organization.parameterName())}/workspaces/{\(Workspace.parameterName())}/clients",
             summary: "Returns all Clients who belong to the specified workspace",
             description: "Endpoint for Client fetching",
             parameters: [
                 APIParameter.bearerHeader(),
-                APIParameter.organizationId(),
-                APIParameter.workspaceId()
+                Organization.parameterDocs(),
+                Workspace.parameterDocs()
             ],
             responses: [
                 APIResponse(
@@ -60,13 +60,13 @@ extension ClientController {
     private static func createDocs() -> APIAction {
         return APIAction(
             method: .post,
-            route: "/organizations/{organizationId}/workspaces/{workspaceId}/clients",
+            route: "/organizations/{\(Organization.parameterName())}/workspaces/{\(Workspace.parameterName())}/clients",
             summary: "Creates a client for the specified workspace",
             description: "Endpoint for Client Creation",
             parameters: [
                 APIParameter.bearerHeader(),
-                APIParameter.organizationId(),
-                APIParameter.workspaceId()
+                Organization.parameterDocs(),
+                Workspace.parameterDocs()
             ],
             responses: [
                 APIResponse(

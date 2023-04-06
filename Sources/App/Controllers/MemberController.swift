@@ -6,7 +6,7 @@ struct MemberController: RouteCollection {
         routes.get("", use: index)
         routes.group(RoleMiddleware([.admin])) { adminProtected in
             adminProtected.post("", use: create)
-            adminProtected.put(":memberId", use: update)
+            adminProtected.put(Member.parameterDefinition(), use: update)
         }
     }
 
@@ -30,11 +30,8 @@ struct MemberController: RouteCollection {
         }
 
         let workspace = try await Workspace.find(req: req)
-
-        let existingMember = try await Member.query(on: req.db)
-            .filter(\.$user.$id == user.requireID())
-            .filter(\.$workspace.$id == workspace.requireID())
-            .first()
+        
+        let existingMember = try await Member.find(for: user, in: workspace.requireID(), on: req.db)
 
         if existingMember != nil {
             throw Abort(.badRequest)
@@ -50,9 +47,7 @@ struct MemberController: RouteCollection {
     func update(req: Request) async throws -> MemberResponse {
         let memberData = try req.content.decode(MemberUpdateInput.self)
 
-        guard let member = try await Member.find(req.parameters.get("memberId"), on: req.db) else {
-            throw Abort(.badRequest)
-        }
+        let member = try await Member.find(req: req)
 
         if let role = memberData.role {
             member.role = role

@@ -23,6 +23,7 @@ struct OpenAPIGenerator: Command {
             )
         )
         .appendClientDocs()
+        .appendAuthDocs()
         .built()
 
         guard let fileURL = try? createJSONOutputFileFromDocs(docs: docs) else {

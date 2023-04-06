@@ -45,3 +45,11 @@ final class Member: Model {
 
     init() {}
 }
+
+extension Member: PathParameter {
+    typealias ModelType = Member
+
+    static func parameterName() -> String {
+        return "memberId"
+    }
+}
