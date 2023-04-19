@@ -2,6 +2,7 @@ import Fluent
 import FluentPostgresDriver
 import Vapor
 import JWT
+import FCM
 
 // configures your application
 public func configure(_ app: Application) throws {
@@ -28,10 +29,14 @@ public func configure(_ app: Application) throws {
     app.migrations.add(CreateWorktime())
     app.migrations.add(CreateTask())
     app.migrations.add(CreateOrganizationUser())
+    app.migrations.add(CreateDevice())
     
     app.commands.use(OpenAPIGenerator(), as: "api-gen")
     
     app.http.server.configuration.address = BindAddress.hostname("0.0.0.0", port: 8080)
+    
+    // FCM
+    app.fcm.configuration = .envServiceAccountKey
     
     // register routes
     try routes(app)

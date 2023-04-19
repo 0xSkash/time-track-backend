@@ -19,7 +19,7 @@ struct UserController: RouteCollection {
 
         try await user.save(on: req.db)
 
-        return try UserResponse(user: user)
+        return UserResponse(user: user)
     }
 
     func indexOrganizations(req: Request) async throws -> [OrganizationResponse] {

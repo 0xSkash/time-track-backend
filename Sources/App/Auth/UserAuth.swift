@@ -28,8 +28,10 @@ struct UserAuth: RouteCollection {
         let user = try req.auth.require(User.self)
         let payload = try SessionToken(user: user)
         let token = try req.jwt.sign(payload)
+        let device = try req.validateAndDecode(CreateDeviceInput.self).toDevice(userId: user.requireID())
 
         if !user.twoFactorEnabled {
+            try await device.createOrUpdate(req: req)
             return ClientTokenResponse(token: token, userId: try user.requireID())
         }
 
@@ -42,6 +44,8 @@ struct UserAuth: RouteCollection {
         guard twoFactorToken.validate(code) else {
             throw Abort(.unauthorized)
         }
+
+        try await device.createOrUpdate(req: req)
 
         return ClientTokenResponse(token: token, userId: try user.requireID())
     }
@@ -107,7 +111,7 @@ struct UserAuth: RouteCollection {
         }
 
         let userToken = try await UserAuth.find(for: user, on: req.db)
-        
+
         user.twoFactorEnabled = false
         try await userToken.delete(on: req.db)
         try await user.save(on: req.db)

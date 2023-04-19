@@ -5,7 +5,8 @@ extension OpenAPIBuilder {
     func appendAuthDocs() -> OpenAPIBuilder {
         return add([
             ClientTokenResponse.modelDocs(),
-            UserResponse.modelDocs()
+            UserResponse.modelDocs(),
+            CreateDeviceInput.modelDocs()
         ])
         .add(UserAuth.modelDocs())
     }
@@ -36,6 +37,19 @@ private extension UserResponse {
     }
 }
 
+private extension CreateDeviceInput {
+    static func modelDocs() -> APIObject<CreateDeviceInput> {
+        let model = CreateDeviceInput(
+            manufacturer: "Android",
+            model: "Pixel 7",
+            osVersion: "33",
+            pushToken: "GEGWEJGJWKEGJWEGJKWE"
+        )
+
+        return APIObject(object: model, customName: "Device")
+    }
+}
+
 extension UserAuth {
     fileprivate static func modelDocs() -> APIController {
         return APIController(
@@ -60,6 +74,7 @@ extension UserAuth {
                 APIParameter.basicAuthHeader(),
                 APIParameter.twoFactorHeader()
             ],
+            request: APIRequest(type: .object(CreateDeviceInput.self)),
             responses: [
                 APIResponse(
                     code: "200",
