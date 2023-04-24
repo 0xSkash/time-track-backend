@@ -8,9 +8,9 @@ import FCM
 public func configure(_ app: Application) throws {
     // uncomment to serve files from /Public folder
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
-
+    
     app.jwt.signers.use(.hs256(key: "secret"))
-
+    
     app.databases.use(.postgres(
         hostname: Environment.get("DATABASE_HOST") ?? "localhost",
         port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? PostgresConfiguration.ianaPortNumber,
@@ -30,6 +30,7 @@ public func configure(_ app: Application) throws {
     app.migrations.add(CreateTask())
     app.migrations.add(CreateOrganizationUser())
     app.migrations.add(CreateDevice())
+    app.migrations.add(AddAvatarToUser())
     
     app.commands.use(OpenAPIGenerator(), as: "api-gen")
     

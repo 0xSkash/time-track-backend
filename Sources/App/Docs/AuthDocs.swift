@@ -30,7 +30,8 @@ private extension UserResponse {
             firstName: "Skash",
             lastName: "Mash",
             email: "skash@skash.de",
-            passwordHash: "ENMGWNEGEioejge"
+            passwordHash: "ENMGWNEGEioejge",
+            avatar: "path/to/avatar"
         ))
 
         return APIObject(object: model)

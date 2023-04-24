@@ -27,6 +27,9 @@ final class User: Model, Content {
 
     @Field(key: "two_factor_enabled")
     var twoFactorEnabled: Bool
+    
+    @Field(key: "avatar")
+    var avatar: String?
 
     @Children(for: \TwoFactorToken.$user)
     var twoFactorToken: [TwoFactorToken]
@@ -40,7 +43,8 @@ final class User: Model, Content {
         lastName: String,
         email: String,
         passwordHash: String,
-        twoFactorEnabled: Bool = false
+        twoFactorEnabled: Bool = false,
+        avatar: String?
     ) {
         self.id = id
         self.firstName = firstName
@@ -48,6 +52,7 @@ final class User: Model, Content {
         self.email = email
         self.passwordHash = passwordHash
         self.twoFactorEnabled = twoFactorEnabled
+        self.avatar = avatar
     }
 
     init() {}
@@ -59,7 +64,6 @@ extension User: ModelAuthenticatable {
 
     // Password verification used via AppUser.authenticator() / Basic Auth
     func verify(password: String) throws -> Bool {
-        print("verify User")
         return try Bcrypt.verify(password, created: passwordHash)
     }
 }

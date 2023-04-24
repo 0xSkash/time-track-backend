@@ -16,9 +16,14 @@ struct CreateUserInput: Content, Validatable {
             firstName: firstName,
             lastName: lastName,
             email: email,
-            passwordHash: try Bcrypt.hash(password)
+            passwordHash: try Bcrypt.hash(password),
+            avatar: nil
         )
     }
+}
+
+struct AvatarInput: Content {
+    let file: File
 }
 
 struct UserResponse: Content {
@@ -26,6 +31,7 @@ struct UserResponse: Content {
     let firstName: String
     let lastName: String
     let email: String
+    let avatarPath: String?
     let twoFactorEnabled: Bool
 
     init(user: User) {
@@ -34,5 +40,6 @@ struct UserResponse: Content {
         lastName = user.lastName
         email = user.email
         twoFactorEnabled = user.twoFactorEnabled
+        avatarPath = user.avatar
     }
 }
