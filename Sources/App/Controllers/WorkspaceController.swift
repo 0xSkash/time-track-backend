@@ -42,7 +42,7 @@ struct WorkspaceController: RouteCollection {
             .filter(Member.self, \.$user.$id == user.requireID())
             .all()
             .map { ws in
-                try WorkspaceResponse(workspace: ws)
+                WorkspaceResponse(workspace: ws)
             }
     }
 

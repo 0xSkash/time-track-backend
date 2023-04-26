@@ -100,7 +100,7 @@ extension UserAuth {
             responses: [
                 APIResponse(
                     code: "200",
-                    description: "The created client",
+                    description: "The authenticated user",
                     type: .object(UserResponse.self)
                 ),
                 APIResponse.unauthorized()

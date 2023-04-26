@@ -26,6 +26,11 @@ struct AvatarInput: Content {
     let file: File
 }
 
+
+struct AvatarResponse: Content {
+    let avatarName: String
+}
+
 struct UserResponse: Content {
     let id: UUID?
     let firstName: String

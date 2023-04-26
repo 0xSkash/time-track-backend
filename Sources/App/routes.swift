@@ -12,6 +12,14 @@ func routes(_ app: Application) throws {
             try users.register(collection: UserController())
         }
 
+        try app.group("avatars") { avatar in
+            try avatar.register(collection: AvatarController())
+        }
+
+        try app.group("worktime") { worktime in
+            try worktime.register(collection: WorktimeController())
+        }
+
         try app.group(TokenAuthenticator()) { protected in
             try protected.group("organizations") { organizations in
                 try organizations.register(collection: OrganizationController())
@@ -27,22 +35,16 @@ func routes(_ app: Application) throws {
                         try memberProtected.group(":workspaceId", "projects") { projects in
                             try projects.register(collection: ProjectController())
                         }
-                        
-                        try memberProtected.group(":workspaceId", "worktimes") { worktimes in
-                            try worktimes.register(collection: WorktimeController())
-                        }
-                        
+
                         try memberProtected.group(":workspaceId", "tasks") { tasks in
                             try tasks.register(collection: TaskController())
                         }
-                        
+
                         try memberProtected.group(":workspaceId", "clients") { clients in
                             try clients.register(collection: ClientController())
                         }
                     }
                 }
-
-                
             }
         }
     }

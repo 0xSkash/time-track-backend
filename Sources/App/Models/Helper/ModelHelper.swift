@@ -13,7 +13,7 @@ extension PathParameter {
         return ":\(parameterName())"
     }
 
-    static func find(req: Request, abort: Abort = Abort(.badRequest)) async throws -> ModelType {
+    static func find(req: Request, abort: Abort = Abort(.notFound)) async throws -> ModelType {
         guard let model = try await ModelType.find(
             req.parameters.get(ModelType.parameterName()),
             on: req.db

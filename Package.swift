@@ -12,7 +12,7 @@ let package = Package(
         .package(url: "https://github.com/vapor/fluent.git", from: "4.0.0"),
         .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.0.0"),
         .package(url: "https://github.com/vapor/jwt.git", from: "4.0.0"),
-        .package(url: "https://github.com/mczachurski/Swiftgger.git", exact: "2.0.0-rc2"),
+        .package(url: "https://github.com/0xSkash/Swiftgger.git", branch: "master"),
         .package(url: "https://github.com/MihaelIsaev/FCM.git", from: "2.7.0")
     ],
     targets: [

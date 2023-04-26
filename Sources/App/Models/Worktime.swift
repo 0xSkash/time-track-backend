@@ -13,8 +13,8 @@ final class Worktime: Model {
     @Timestamp(key: "updated_at", on: .update)
     var updatedAt: Date?
 
-    @Parent(key: "member_id")
-    var member: Member
+    @Parent(key: "user_id")
+    var user: User
 
     @Field(key: "duration")
     var duration: Int
@@ -29,7 +29,7 @@ final class Worktime: Model {
         id: UUID? = nil,
         createdAt: Date? = nil,
         updatedAt: Date? = nil,
-        memberId: Member.IDValue,
+        userId: User.IDValue,
         duration: Int,
         startedAt: Date,
         endedAt: Date
@@ -37,7 +37,7 @@ final class Worktime: Model {
         self.id = id
         self.createdAt = createdAt
         self.updatedAt = updatedAt
-        $member.id = memberId
+        $user.id = userId
         self.duration = duration
         self.startedAt = startedAt
         self.endedAt = endedAt

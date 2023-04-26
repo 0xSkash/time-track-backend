@@ -21,13 +21,15 @@ struct CreateWorkspaceInput: Content, Validatable {
 }
 
 struct WorkspaceResponse: Content {
-    let id: UUID
+    let id: UUID?
     let title: String
     let isBillable: Bool
+    let organiztionId: UUID
 
-    init(workspace: Workspace) throws {
-        id = try workspace.requireID()
+    init(workspace: Workspace) {
+        id = try workspace.id
         title = workspace.title
         isBillable = workspace.isBillable
+        organiztionId = workspace.$organization.id
     }
 }

@@ -32,3 +32,4 @@ struct TwoFactorTokenResponse: Content {
         )
     }
 }
+

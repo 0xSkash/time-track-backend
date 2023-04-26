@@ -6,7 +6,7 @@ struct CreateWorktime: AsyncMigration {
             .id()
             .field("created_at", .datetime, .required)
             .field("updated_at", .datetime)
-            .field("member_id", .uuid, .references(Member.schema, "id"), .required)
+            .field("user_id", .uuid, .references(User.schema, "id"), .required)
             .field("duration", .int)
             .field("started_at", .datetime, .required)
             .field("ended_at", .datetime)

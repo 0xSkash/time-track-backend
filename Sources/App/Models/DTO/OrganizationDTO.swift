@@ -13,11 +13,11 @@ struct CreateOrganizationInput: Content, Validatable {
 }
 
 struct OrganizationResponse: Content {
-    let id: UUID
+    let id: UUID?
     let name: String
 
-    init(organization: Organization) throws {
-        id = try organization.requireID()
+    init(organization: Organization) {
+        id = organization.id
         name = organization.name
     }
 }

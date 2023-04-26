@@ -11,9 +11,9 @@ struct CreateWorktimeInput: Content, Validatable {
         validations.add("duration", as: Int.self)
     }
 
-    func toWorktime(memberId: Member.IDValue) -> Worktime {
+    func toWorktime(userId: User.IDValue) -> Worktime {
         return Worktime(
-            memberId: memberId,
+            userId: userId,
             duration: duration,
             startedAt: startedAt,
             endedAt: endedAt
@@ -24,13 +24,15 @@ struct CreateWorktimeInput: Content, Validatable {
 struct UpdateWorktimeInput: Content {}
 
 struct WorktimeResponse: Content {
+    let id: UUID?
     let startedAt: Date
     let endedAt: Date
     let duration: Int
 
     init(worktime: Worktime) {
-        self.startedAt = worktime.startedAt
-        self.endedAt = worktime.endedAt
-        self.duration = worktime.duration
+        id = worktime.id
+        startedAt = worktime.startedAt
+        endedAt = worktime.endedAt
+        duration = worktime.duration
     }
 }
