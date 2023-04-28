@@ -31,7 +31,14 @@ private extension UserResponse {
             lastName: "Mash",
             email: "skash@skash.de",
             passwordHash: "ENMGWNEGEioejge",
+            selectedWorkspaceId: UUID.generateRandom(),
             avatar: "path/to/avatar"
+        ), workspace: Workspace(
+            id: UUID.generateRandom(),
+            title: "TimeTrack",
+            organizationId: UUID.generateRandom(),
+            creatorId: UUID.generateRandom(),
+            isBillable: true
         ))
 
         return APIObject(object: model)

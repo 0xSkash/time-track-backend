@@ -13,6 +13,7 @@ extension OpenAPIBuilder {
 extension ClientResponse {
     fileprivate static func modelDocs() -> APIObject<ClientResponse> {
         let model = ClientResponse(client: Client(
+            id: UUID.generateRandom(),
             title: "Example Title",
             workspaceId: UUID.generateRandom(),
             isBillable: true

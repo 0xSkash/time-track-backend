@@ -17,6 +17,7 @@ struct CreateUserInput: Content, Validatable {
             lastName: lastName,
             email: email,
             passwordHash: try Bcrypt.hash(password),
+            selectedWorkspaceId: nil,
             avatar: nil
         )
     }
@@ -26,6 +27,9 @@ struct AvatarInput: Content {
     let file: File
 }
 
+struct SelectedWorkspaceInput: Content {
+    let workspaceId: UUID
+}
 
 struct AvatarResponse: Content {
     let avatarName: String
@@ -36,14 +40,20 @@ struct UserResponse: Content {
     let firstName: String
     let lastName: String
     let email: String
+    let selectedWorkspace: WorkspaceResponse?
     let avatarPath: String?
     let twoFactorEnabled: Bool
 
-    init(user: User) {
+    init(user: User, workspace: Workspace?) {
         id = user.id
         firstName = user.firstName
         lastName = user.lastName
         email = user.email
+        if let workspace {
+            selectedWorkspace = WorkspaceResponse(workspace: workspace)
+        } else {
+            selectedWorkspace = nil
+        }
         twoFactorEnabled = user.twoFactorEnabled
         avatarPath = user.avatar
     }

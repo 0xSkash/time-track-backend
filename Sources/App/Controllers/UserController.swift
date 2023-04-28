@@ -14,6 +14,8 @@ struct UserController: RouteCollection {
             protected.post("me", "avatar", use: updateAvatar)
             protected.delete("me", "avatar", use: destroyAvatar)
             protected.get("me", "worktime", use: indexWorktime)
+            protected.get("me", "tasks", use: indexTasks)
+            protected.put("me", "selected_workspace", use: updateSelectedWorkspace)
         }
     }
 
@@ -26,7 +28,7 @@ struct UserController: RouteCollection {
 
         try await user.save(on: req.db)
 
-        return UserResponse(user: user)
+        return UserResponse(user: user, workspace: nil)
     }
 
     func indexOrganizations(req: Request) async throws -> [OrganizationResponse] {
@@ -40,7 +42,7 @@ struct UserController: RouteCollection {
             OrganizationResponse(organization: org)
         }
     }
-    
+
     func indexWorktime(req: Request) async throws -> [WorktimeResponse] {
         guard let user = req.auth.get(User.self) else {
             throw Abort(.unauthorized)
@@ -52,6 +54,51 @@ struct UserController: RouteCollection {
             .map { worktime in
                 WorktimeResponse(worktime: worktime)
             }
+    }
+
+    func indexTasks(req: Request) async throws -> [TaskResponse] {
+        guard let user = req.auth.get(User.self) else {
+            throw Abort(.unauthorized)
+        }
+
+        guard let workspace = try await user.$selectedWorkspace.get(on: req.db) else {
+            throw Abort(.badRequest)
+        }
+
+        guard let member = try await Member.find(for: user, in: workspace.requireID(), on: req.db) else {
+            throw Abort(.badRequest)
+        }
+
+        return try await Task.query(on: req.db)
+            .filter(\.$member.$id == member.requireID())
+            .with(\.$project) { project in
+                project.with(\.$client)
+            }
+            .all()
+            .map { task in
+                TaskResponse(task: task, project: task.project, client: task.project.client)
+            }
+    }
+
+    func updateSelectedWorkspace(req: Request) async throws -> UserResponse {
+        guard let user = req.auth.get(User.self) else {
+            throw Abort(.unauthorized)
+        }
+
+        let workspaceInput = try req.content.decode(SelectedWorkspaceInput.self)
+
+        guard let workspace = try await Workspace.find(workspaceInput.workspaceId, on: req.db) else {
+            throw Abort(.notFound)
+        }
+
+        guard (try await Member.find(for: user, in: workspace.requireID(), on: req.db)) != nil else {
+            throw Abort(.unauthorized)
+        }
+
+        user.$selectedWorkspace.id = try workspace.requireID()
+        try await user.save(on: req.db)
+
+        return UserResponse(user: user, workspace: workspace)
     }
 
     func updateAvatar(req: Request) async throws -> AvatarResponse {

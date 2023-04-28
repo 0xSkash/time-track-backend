@@ -27,9 +27,12 @@ final class User: Model, Content {
 
     @Field(key: "two_factor_enabled")
     var twoFactorEnabled: Bool
-    
+
     @Field(key: "avatar")
     var avatar: String?
+
+    @OptionalParent(key: "selected_workspace_id")
+    var selectedWorkspace: Workspace?
 
     @Children(for: \TwoFactorToken.$user)
     var twoFactorToken: [TwoFactorToken]
@@ -43,6 +46,7 @@ final class User: Model, Content {
         lastName: String,
         email: String,
         passwordHash: String,
+        selectedWorkspaceId: Workspace.IDValue?,
         twoFactorEnabled: Bool = false,
         avatar: String?
     ) {
@@ -51,6 +55,7 @@ final class User: Model, Content {
         self.lastName = lastName
         self.email = email
         self.passwordHash = passwordHash
+        $selectedWorkspace.id = selectedWorkspaceId
         self.twoFactorEnabled = twoFactorEnabled
         self.avatar = avatar
     }
@@ -70,7 +75,7 @@ extension User: ModelAuthenticatable {
 
 extension User: PathParameter {
     typealias ModelType = User
-    
+
     static func parameterName() -> String {
         return "userId"
     }

@@ -7,7 +7,7 @@ struct CreateDevice: AsyncMigration {
             .field("created_at", .datetime, .required)
             .field("updated_at", .datetime)
             .field("last_seen", .datetime)
-            .field("manufacturer", .string, .required, .sql(.unique))
+            .field("manufacturer", .string, .required)
             .field("model", .string, .required)
             .field("os_version", .string, .required)
             .field("push_token", .string, .required, .sql(.unique))

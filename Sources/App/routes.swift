@@ -19,6 +19,14 @@ func routes(_ app: Application) throws {
         try app.group("worktime") { worktime in
             try worktime.register(collection: WorktimeController())
         }
+        
+        try app.group("tasks") { tasks in
+            try tasks.register(collection: TaskController())
+        }
+        
+        try app.group("projects") { projects in
+            try projects.register(collection: ProjectController())
+        }
 
         try app.group(TokenAuthenticator()) { protected in
             try protected.group("organizations") { organizations in

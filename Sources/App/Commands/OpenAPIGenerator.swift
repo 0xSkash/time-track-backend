@@ -24,9 +24,11 @@ struct OpenAPIGenerator: Command {
         )
         .appendClientDocs()
         .appendAuthDocs()
+        .appendProjectDocs()
         .appendOrganizationDocs()
         .appendWorkspaceDocs()
         .appendWorktimeDocs()
+        .appendTaskDocs()
         .appendUserDocs()
         .built()
 

@@ -20,10 +20,12 @@ struct UpdateClientInput: Content {
 }
 
 struct ClientResponse: Content {
+    let id: UUID?
     let title: String
     let isBillable: Bool
 
     init(client: Client) {
+        id = client.id
         title = client.title
         isBillable = client.isBillable
     }

@@ -34,6 +34,7 @@ public func configure(_ app: Application) throws {
     app.migrations.add(CreateOrganizationUser())
     app.migrations.add(CreateDevice())
     app.migrations.add(AddAvatarToUser())
+    app.migrations.add(AddSelectedWorkspaceToUser())
 
     app.commands.use(OpenAPIGenerator(), as: "api-gen")
 

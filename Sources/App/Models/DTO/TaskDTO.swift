@@ -30,17 +30,19 @@ struct CreateTaskInput: Content, Validatable {
 struct UpdateTaskInput: Content {}
 
 struct TaskResponse: Content {
+    let id: UUID?
     let startedAt: Date
     let endedAt: Date
     let duration: Int
     let project: ProjectResponse
     let description: String
 
-    init(task: Task) {
+    init(task: Task, project: Project, client: Client) {
+        id = task.id
         startedAt = task.startedAt
         endedAt = task.endedAt
         duration = task.duration
-        project = ProjectResponse(project: task.project)
+        self.project = ProjectResponse(project: project, client: client)
         description = task.description
     }
 }

@@ -25,15 +25,18 @@ struct UpdateProjectInput: Content {
 }
 
 struct ProjectResponse: Content {
+    let id: UUID?
     let title: String
     let color: String
     let client: ClientResponse
 
     init(
-        project: Project
+        project: Project,
+        client: Client
     ) {
+        id = project.id
         title = project.title
         color = project.color
-        client = ClientResponse(client: project.client)
+        self.client = ClientResponse(client: client)
     }
 }

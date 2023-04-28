@@ -31,7 +31,7 @@ struct MemberResponse: Content {
         role = member.role
         isBillable = member.isBillable
         if let user {
-            self.user = try UserResponse(user: user)
+            self.user = UserResponse(user: user, workspace: nil)
         } else {
             self.user = nil
         }

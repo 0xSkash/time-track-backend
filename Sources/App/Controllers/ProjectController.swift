@@ -3,12 +3,20 @@ import Vapor
 
 struct ProjectController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
-        routes.get("", use: index)
-        routes.post("", use: create)
+        routes.group(TokenAuthenticator()) { protected in
+            protected.get("", use: index)
+            protected.post("", use: create)
+        }
     }
 
     func index(req: Request) async throws -> [ProjectResponse] {
-        let workspace = try await Workspace.find(req: req)
+        guard let user = req.auth.get(User.self) else {
+            throw Abort(.unauthorized)
+        }
+
+        guard let workspace = try await user.$selectedWorkspace.get(on: req.db) else {
+            throw Abort(.badRequest)
+        }
 
         return try await Project.query(on: req.db)
             .filter(\.$workspace.$id == workspace.requireID())
@@ -16,7 +24,8 @@ struct ProjectController: RouteCollection {
             .all()
             .map { project in
                 ProjectResponse(
-                    project: project
+                    project: project,
+                    client: project.client
                 )
             }
     }
@@ -43,7 +52,7 @@ struct ProjectController: RouteCollection {
         try await project.$client.load(on: req.db)
 
         return ProjectResponse(
-            project: project
+            project: project, client: project.client
         )
     }
 }

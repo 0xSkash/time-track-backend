@@ -8,7 +8,8 @@ extension OpenAPIBuilder {
         return add([
             CreateUserInput.modelDocs(),
             AvatarInput.modelDocs(),
-            AvatarResponse.modelDocs()
+            AvatarResponse.modelDocs(),
+            SelectedWorkspaceInput.modelDocs()
         ])
         .add(UserController.modelDocs())
     }
@@ -35,6 +36,14 @@ private extension AvatarInput {
     }
 }
 
+private extension SelectedWorkspaceInput {
+    static func modelDocs() -> APIObject<SelectedWorkspaceInput> {
+        let model = SelectedWorkspaceInput(workspaceId: UUID.generateRandom())
+
+        return APIObject(object: model, customName: "SelectedWorkspaceInput")
+    }
+}
+
 private extension AvatarResponse {
     static func modelDocs() -> APIObject<AvatarResponse> {
         let model = AvatarResponse(avatarName: UUID.generateRandom().uuidString)
@@ -53,7 +62,9 @@ extension UserController {
                 updateAvatarDocs(),
                 destroyAvatarDocs(),
                 indexOrganizationsDocs(),
-                indexWorktimeDocs()
+                indexWorktimeDocs(),
+                updateSelectedWorkspaceDocs(),
+                indexTasksDocs()
             ]
         )
     }
@@ -72,6 +83,28 @@ extension UserController {
                     type: .object(UserResponse.self)
                 ),
                 APIResponse(code: "406", description: "Input Data not acceptable")
+            ]
+        )
+    }
+
+    private static func updateSelectedWorkspaceDocs() -> APIAction {
+        return APIAction(
+            method: .put,
+            route: "/users/me/selected_workspace",
+            summary: "Updates selected workspace of authenticated user",
+            description: "Endpoint for updating selected workspace of authenticated users",
+            parameters: [
+                APIParameter.bearerHeader()
+            ],
+            request: APIRequest(type: .object(SelectedWorkspaceInput.self)),
+            responses: [
+                APIResponse(
+                    code: "200",
+                    description: "Updated User",
+                    type: .object(UserResponse.self)
+                ),
+                APIResponse.unauthorized(),
+                APIResponse(code: "404", description: "Workspace not found")
             ]
         )
     }
@@ -136,7 +169,7 @@ extension UserController {
             ]
         )
     }
-    
+
     private static func indexWorktimeDocs() -> APIAction {
         return APIAction(
             method: .get,
@@ -144,12 +177,33 @@ extension UserController {
             summary: "Returns worktimes of the authenticated user in specified.",
             description: "Endpoint for fetching of users worktimes",
             parameters: [
-                APIParameter.bearerHeader()            ],
+                APIParameter.bearerHeader()
+            ],
             responses: [
                 APIResponse(
                     code: "200",
                     description: "List of Worktimes",
                     type: .object(WorktimeResponse.self, asCollection: true)
+                ),
+                APIResponse.unauthorized()
+            ]
+        )
+    }
+    
+    private static func indexTasksDocs() -> APIAction {
+        return APIAction(
+            method: .get,
+            route: "/users/me/tasks",
+            summary: "Returns tasks of the authenticated user.",
+            description: "Endpoint for fetching of users tasks",
+            parameters: [
+                APIParameter.bearerHeader()
+            ],
+            responses: [
+                APIResponse(
+                    code: "200",
+                    description: "List of Tasks",
+                    type: .object(TaskResponse.self, asCollection: true)
                 ),
                 APIResponse.unauthorized()
             ]

@@ -51,7 +51,16 @@ struct UserAuth: RouteCollection {
     }
 
     func getCurrentUser(req: Request) async throws -> UserResponse {
-        return UserResponse(user: try req.auth.require(User.self))
+        guard let user = req.auth.get(User.self) else {
+            throw Abort(.unauthorized)
+        }
+
+        if user.$selectedWorkspace.id != nil {
+            try await user.$selectedWorkspace.load(on: req.db)
+            return UserResponse(user: user, workspace: user.selectedWorkspace)
+        }
+
+        return UserResponse(user: try req.auth.require(User.self), workspace: nil)
     }
 
     func getTwoFactorToken(req: Request) async throws -> TwoFactorTokenResponse {
