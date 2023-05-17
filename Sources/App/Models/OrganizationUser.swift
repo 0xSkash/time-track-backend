@@ -7,14 +7,16 @@ final class OrganizationUser: Model {
     @ID(key: .id)
     var id: UUID?
 
-    @Parent(key: "organization_id")
+    @Parent(key: Columns.organization.key)
     var organization: Organization
 
-    @Parent(key: "user_id")
+    @Parent(key: Columns.user.key)
     var user: User
 
     init(
-        id: UUID? = nil, organization: Organization, user: User
+        id: UUID? = nil,
+        organization: Organization,
+        user: User
     ) throws {
         self.id = id
         self.$organization.id = try organization.requireID()
@@ -22,4 +24,15 @@ final class OrganizationUser: Model {
     }
 
     init() {}
+}
+
+extension OrganizationUser {
+    enum Columns: FieldKey {
+        case organization = "organization_id"
+        case user = "user_id"
+
+        var key: FieldKey {
+            rawValue
+        }
+    }
 }

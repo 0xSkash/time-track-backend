@@ -7,31 +7,31 @@ final class User: Model, Content {
     @ID(key: .id)
     var id: UUID?
 
-    @Timestamp(key: "created_at", on: .create)
+    @Timestamp(key: Columns.createdAt.key, on: .create)
     var createdAt: Date?
 
-    @Timestamp(key: "updated_at", on: .update)
+    @Timestamp(key: Columns.updatedAt.key, on: .update)
     var updatedAt: Date?
 
-    @Field(key: "first_name")
+    @Field(key: Columns.firstName.key)
     var firstName: String
 
-    @Field(key: "last_name")
+    @Field(key: Columns.lastName.key)
     var lastName: String
 
-    @Field(key: "email")
+    @Field(key: Columns.email.key)
     var email: String
 
-    @Field(key: "password_hash")
+    @Field(key: Columns.passwordHash.key)
     var passwordHash: String
 
-    @Field(key: "two_factor_enabled")
+    @Field(key: Columns.twoFactorEnabled.key)
     var twoFactorEnabled: Bool
 
-    @Field(key: "avatar")
+    @Field(key: Columns.avatar.key)
     var avatar: String?
 
-    @OptionalParent(key: "selected_workspace_id")
+    @OptionalParent(key: Columns.selectedWorkspace.key)
     var selectedWorkspace: Workspace?
 
     @Children(for: \TwoFactorToken.$user)
@@ -78,5 +78,23 @@ extension User: PathParameter {
 
     static func parameterName() -> String {
         return "userId"
+    }
+}
+
+extension User {
+    enum Columns: FieldKey {
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case firstName = "first_name"
+        case lastName = "last_name"
+        case email = "email"
+        case passwordHash = "password_hash"
+        case twoFactorEnabled = "two_factor_enabled"
+        case avatar = "avatar"
+        case selectedWorkspace = "selected_workspace_id"
+
+        var key: FieldKey {
+            rawValue
+        }
     }
 }

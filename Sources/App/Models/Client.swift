@@ -7,19 +7,19 @@ final class Client: Model {
     @ID(key: .id)
     var id: UUID?
 
-    @Timestamp(key: "created_at", on: .create)
+    @Timestamp(key: Columns.createdAt.key, on: .create)
     var createdAt: Date?
 
-    @Timestamp(key: "updated_at", on: .update)
+    @Timestamp(key: Columns.updatedAt.key, on: .update)
     var updatedAt: Date?
 
-    @Field(key: "title")
+    @Field(key: Columns.title.key)
     var title: String
 
-    @Parent(key: "workspace_id")
+    @Parent(key: Columns.workspace.key)
     var workspace: Workspace
 
-    @Field(key: "is_billable")
+    @Field(key: Columns.isBillable.key)
     var isBillable: Bool
 
     init(
@@ -39,4 +39,18 @@ final class Client: Model {
     }
 
     init() {}
+}
+
+extension Client {
+    enum Columns: FieldKey {
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case title = "title"
+        case workspace = "workspace_id"
+        case isBillable = "isBillable"
+
+        var key: FieldKey {
+            rawValue
+        }
+    }
 }

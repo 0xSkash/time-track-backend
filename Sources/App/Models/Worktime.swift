@@ -7,22 +7,22 @@ final class Worktime: Model {
     @ID(key: .id)
     var id: UUID?
 
-    @Timestamp(key: "created_at", on: .create)
+    @Timestamp(key: Columns.createdAt.key, on: .create)
     var createdAt: Date?
 
-    @Timestamp(key: "updated_at", on: .update)
+    @Timestamp(key: Columns.updatedAt.key, on: .update)
     var updatedAt: Date?
 
-    @Parent(key: "user_id")
+    @Parent(key: Columns.user.key)
     var user: User
 
-    @Field(key: "duration")
+    @Field(key: Columns.duration.key)
     var duration: Int
 
-    @Field(key: "started_at")
+    @Field(key: Columns.startedAt.key)
     var startedAt: Date
 
-    @Field(key: "ended_at")
+    @Field(key: Columns.endedAt.key)
     var endedAt: Date
 
     init(
@@ -44,4 +44,19 @@ final class Worktime: Model {
     }
 
     init() {}
+}
+
+extension Worktime {
+    enum Columns: FieldKey {
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case user = "user_id"
+        case duration = "duration"
+        case startedAt = "started_at"
+        case endedAt = "ended_at"
+
+        var key: FieldKey {
+            rawValue
+        }
+    }
 }

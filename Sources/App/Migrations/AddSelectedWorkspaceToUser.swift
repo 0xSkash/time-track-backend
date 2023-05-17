@@ -4,11 +4,11 @@ import Fluent
 struct AddSelectedWorkspaceToUser: AsyncMigration {
     func prepare(on database: Database) async throws {
         try await database.schema(User.schema)
-            .field("selected_workspace_id", .uuid, .references(Workspace.schema, "id"))
+            .field(User.Columns.selectedWorkspace.key, .uuid, .references(Workspace.schema, "id"))
             .update()
     }
 
     func revert(on database: Database) async throws {
-        try await database.schema(User.schema).deleteField("selected_workspace_id").update()
+        try await database.schema(User.schema).deleteField(User.Columns.selectedWorkspace.key).update()
     }
 }

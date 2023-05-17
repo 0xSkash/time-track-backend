@@ -7,28 +7,28 @@ final class Task: Model {
     @ID(key: .id)
     var id: UUID?
 
-    @Timestamp(key: "created_at", on: .create)
+    @Timestamp(key: Columns.createdAt.key, on: .create)
     var createdAt: Date?
 
-    @Timestamp(key: "updated_at", on: .update)
+    @Timestamp(key: Columns.updatedAt.key, on: .update)
     var updatedAt: Date?
 
-    @Parent(key: "member_id")
+    @Parent(key: Columns.member.key)
     var member: Member
 
-    @Parent(key: "project_id")
+    @Parent(key: Columns.project.key)
     var project: Project
 
-    @Field(key: "duration")
+    @Field(key: Columns.duration.key)
     var duration: Int
 
-    @Field(key: "description")
+    @Field(key: Columns.description.key)
     var description: String
 
-    @Field(key: "started_at")
+    @Field(key: Columns.startedAt.key)
     var startedAt: Date
 
-    @Field(key: "ended_at")
+    @Field(key: Columns.endedAt.key)
     var endedAt: Date
 
     init(
@@ -54,4 +54,21 @@ final class Task: Model {
     }
 
     init() {}
+}
+
+extension Task {
+    enum Columns: FieldKey {
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case member = "member_id"
+        case project = "project_id"
+        case duration = "duration"
+        case description = "description"
+        case startedAt = "started_at"
+        case endedAt = "ended_at"
+
+        var key: FieldKey {
+            rawValue
+        }
+    }
 }

@@ -7,28 +7,28 @@ final class Device: Model {
     @ID(key: .id)
     var id: UUID?
 
-    @Timestamp(key: "created_at", on: .create)
+    @Timestamp(key: Columns.createdAt.key, on: .create)
     var createdAt: Date?
 
-    @Timestamp(key: "updated_at", on: .update)
+    @Timestamp(key: Columns.updatedAt.key, on: .update)
     var updatedAt: Date?
 
-    @Timestamp(key: "last_seen", on: .none)
+    @Timestamp(key: Columns.lastSeen.key, on: .none)
     var lastSeen: Date?
 
-    @Field(key: "manufacturer")
+    @Field(key: Columns.manufacturer.key)
     var manufacturer: String
 
-    @Field(key: "model")
+    @Field(key: Columns.model.key)
     var model: String
 
-    @Field(key: "os_version")
+    @Field(key: Columns.osVersion.key)
     var osVersion: String
 
-    @Field(key: "push_token")
+    @Field(key: Columns.pushToken.key)
     var pushToken: String
 
-    @Parent(key: "user_id")
+    @Parent(key: Columns.userId.key)
     var user: User
 
     init(
@@ -69,5 +69,22 @@ final class Device: Model {
         existingDevice.osVersion = osVersion
         existingDevice.manufacturer = manufacturer
         try await existingDevice.save(on: req.db)
+    }
+}
+
+extension Device {
+    enum Columns: FieldKey {
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case lastSeen = "last_seen"
+        case manufacturer = "manufacturer"
+        case model = "model"
+        case osVersion = "os_version"
+        case pushToken = "pushToken"
+        case userId = "user_id"
+
+        var key: FieldKey {
+            rawValue
+        }
     }
 }

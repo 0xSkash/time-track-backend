@@ -4,12 +4,12 @@ struct CreateWorktime: AsyncMigration {
     func prepare(on database: Database) async throws {
         try await database.schema(Worktime.schema)
             .id()
-            .field("created_at", .datetime, .required)
-            .field("updated_at", .datetime)
-            .field("user_id", .uuid, .references(User.schema, "id"), .required)
-            .field("duration", .int)
-            .field("started_at", .datetime, .required)
-            .field("ended_at", .datetime)
+            .field(Worktime.Columns.createdAt.key, .datetime, .required)
+            .field(Worktime.Columns.updatedAt.key, .datetime)
+            .field(Worktime.Columns.user.key, .uuid, .references(User.schema, "id"), .required)
+            .field(Worktime.Columns.duration.key, .int)
+            .field(Worktime.Columns.startedAt.key, .datetime, .required)
+            .field(Worktime.Columns.endedAt.key, .datetime)
             .create()
     }
 

@@ -7,25 +7,25 @@ final class Project: Model {
     @ID(key: .id)
     var id: UUID?
 
-    @Timestamp(key: "created_at", on: .create)
+    @Timestamp(key: Columns.createdAt.key, on: .create)
     var createdAt: Date?
 
-    @Timestamp(key: "updated_at", on: .update)
+    @Timestamp(key: Columns.updatedAt.key, on: .update)
     var updatedAt: Date?
 
-    @Field(key: "title")
+    @Field(key: Columns.title.key)
     var title: String
 
-    @Field(key: "color")
+    @Field(key: Columns.color.key)
     var color: String
 
-    @Parent(key: "workspace_id")
+    @Parent(key: Columns.workspace.key)
     var workspace: Workspace
 
-    @Parent(key: "client_id")
+    @Parent(key: Columns.client.key)
     var client: Client
 
-    @Parent(key: "creator_id")
+    @Parent(key: Columns.creator.key)
     var creator: Member
 
     init(
@@ -49,4 +49,20 @@ final class Project: Model {
     }
 
     init() {}
+}
+
+extension Project {
+    enum Columns: FieldKey {
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case title = "title"
+        case color = "color"
+        case workspace = "workspace_id"
+        case client = "client_id"
+        case creator = "creator_id"
+
+        var key: FieldKey {
+            rawValue
+        }
+    }
 }

@@ -7,22 +7,21 @@ final class Organization: Model {
     @ID(key: .id)
     var id: UUID?
 
-    @Timestamp(key: "created_at", on: .create)
+    @Timestamp(key: Columns.createdAt.key, on: .create)
     var createdAt: Date?
 
-    @Timestamp(key: "updated_at", on: .update)
+    @Timestamp(key: Columns.updatedAt.key, on: .update)
     var updatedAt: Date?
 
-    @Field(key: "title")
+    @Field(key: Columns.title.key)
     var name: String
 
-    @Parent(key: "owner_id")
+    @Parent(key: Columns.owner.key)
     var owner: User
 
     @Children(for: \.$organization)
     var workspaces: [Workspace]
-    
-    
+
     @Siblings(through: OrganizationUser.self, from: \.$organization, to: \.$user)
     public var users: [User]
 
@@ -45,8 +44,21 @@ final class Organization: Model {
 
 extension Organization: PathParameter {
     typealias ModelType = Organization
-    
+
     static func parameterName() -> String {
         return "organizationId"
+    }
+}
+
+extension Organization {
+    enum Columns: FieldKey {
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case title = "title"
+        case owner = "owner_id"
+
+        var key: FieldKey {
+            rawValue
+        }
     }
 }

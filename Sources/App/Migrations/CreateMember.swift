@@ -9,12 +9,12 @@ struct CreateMember: AsyncMigration {
 
         try await database.schema(Member.schema)
             .id()
-            .field("created_at", .datetime, .required)
-            .field("updated_at", .datetime)
-            .field("workspace_id", .uuid, .references(Workspace.schema, "id"), .required)
-            .field("user_id", .uuid, .references(User.schema, "id"), .required)
-            .field("role", role, .required)
-            .field("is_billable", .bool, .required, .sql(.default(true)))
+            .field(Member.Columns.createdAt.key, .datetime, .required)
+            .field(Member.Columns.updatedAt.key, .datetime)
+            .field(Member.Columns.workspace.key, .uuid, .references(Workspace.schema, "id"), .required)
+            .field(Member.Columns.user.key, .uuid, .references(User.schema, "id"), .required)
+            .field(Member.Columns.role.key, role, .required)
+            .field(Member.Columns.isBillable.key, .bool, .required, .sql(.default(true)))
             .create()
     }
 

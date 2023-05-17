@@ -4,14 +4,14 @@ struct CreateTask: AsyncMigration {
     func prepare(on database: Database) async throws {
         try await database.schema(Task.schema)
             .id()
-            .field("created_at", .datetime, .required)
-            .field("updated_at", .datetime)
-            .field("member_id", .uuid, .references(Member.schema, "id"), .required)
-            .field("project_id", .uuid, .references(Project.schema, "id"), .required)
-            .field("duration", .int)
-            .field("description", .string, .required)
-            .field("started_at", .datetime, .required)
-            .field("ended_at", .datetime)
+            .field(Task.Columns.createdAt.key, .datetime, .required)
+            .field(Task.Columns.updatedAt.key, .datetime)
+            .field(Task.Columns.member.key, .uuid, .references(Member.schema, "id"), .required)
+            .field(Task.Columns.project.key, .uuid, .references(Project.schema, "id"), .required)
+            .field(Task.Columns.duration.key, .int)
+            .field(Task.Columns.description.key, .string, .required)
+            .field(Task.Columns.startedAt.key, .datetime, .required)
+            .field(Task.Columns.endedAt.key, .datetime)
             .create()
     }
 

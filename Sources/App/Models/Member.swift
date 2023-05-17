@@ -7,22 +7,22 @@ final class Member: Model {
     @ID(key: .id)
     var id: UUID?
 
-    @Timestamp(key: "created_at", on: .create)
+    @Timestamp(key: Columns.createdAt.key, on: .create)
     var createdAt: Date?
 
-    @Timestamp(key: "updated_at", on: .update)
+    @Timestamp(key: Columns.updatedAt.key, on: .update)
     var updatedAt: Date?
 
-    @Parent(key: "workspace_id")
+    @Parent(key: Columns.workspace.key)
     var workspace: Workspace
 
-    @Parent(key: "user_id")
+    @Parent(key: Columns.user.key)
     var user: User
 
-    @Enum(key: "role")
+    @Enum(key: Columns.role.key)
     var role: Role
 
-    @Field(key: "is_billable")
+    @Field(key: Columns.isBillable.key)
     var isBillable: Bool
 
     init(
@@ -51,5 +51,20 @@ extension Member: PathParameter {
 
     static func parameterName() -> String {
         return "memberId"
+    }
+}
+
+extension Member {
+    enum Columns: FieldKey {
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case workspace = "workspace_id"
+        case user = "user_id"
+        case role = "role"
+        case isBillable = "isBillable"
+
+        var key: FieldKey {
+            rawValue
+        }
     }
 }

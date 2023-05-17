@@ -4,14 +4,14 @@ struct CreateDevice: AsyncMigration {
     func prepare(on database: Database) async throws {
         try await database.schema(Device.schema)
             .id()
-            .field("created_at", .datetime, .required)
-            .field("updated_at", .datetime)
-            .field("last_seen", .datetime)
-            .field("manufacturer", .string, .required)
-            .field("model", .string, .required)
-            .field("os_version", .string, .required)
-            .field("push_token", .string, .required, .sql(.unique))
-            .field("user_id", .uuid, .references(User.schema, "id"), .required)
+            .field(Device.Columns.createdAt.key, .datetime, .required)
+            .field(Device.Columns.updatedAt.key, .datetime)
+            .field(Device.Columns.lastSeen.key, .datetime)
+            .field(Device.Columns.manufacturer.key, .string, .required)
+            .field(Device.Columns.model.key, .string, .required)
+            .field(Device.Columns.osVersion.key, .string, .required)
+            .field(Device.Columns.pushToken.key, .string, .required, .sql(.unique))
+            .field(Device.Columns.userId.key, .uuid, .references(User.schema, "id"), .required)
             .create()
     }
 

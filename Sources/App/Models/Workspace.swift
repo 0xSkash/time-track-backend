@@ -7,25 +7,25 @@ final class Workspace: Model {
     @ID(key: .id)
     var id: UUID?
 
-    @Timestamp(key: "created_at", on: .create)
+    @Timestamp(key: Columns.createdAt.key, on: .create)
     var createdAt: Date?
 
-    @Timestamp(key: "updated_at", on: .update)
+    @Timestamp(key: Columns.updatedAt.key, on: .update)
     var updatedAt: Date?
 
-    @Field(key: "title")
+    @Field(key: Columns.title.key)
     var title: String
 
-    @Parent(key: "organization_id")
+    @Parent(key: Columns.organization.key)
     var organization: Organization
 
-    @Parent(key: "creator_id")
+    @Parent(key: Columns.creator.key)
     var creator: User
 
     @Children(for: \.$workspace)
     var members: [Member]
 
-    @Field(key: "is_billable")
+    @Field(key: Columns.isBillable.key)
     var isBillable: Bool
 
     init(
@@ -51,8 +51,23 @@ final class Workspace: Model {
 
 extension Workspace: PathParameter {
     typealias ModelType = Workspace
-    
+
     static func parameterName() -> String {
         "workspaceId"
+    }
+}
+
+extension Workspace {
+    enum Columns: FieldKey {
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case title = "title"
+        case organization = "organization_id"
+        case creator = "creator_id"
+        case isBillable = "is_billable"
+
+        var key: FieldKey {
+            rawValue
+        }
     }
 }

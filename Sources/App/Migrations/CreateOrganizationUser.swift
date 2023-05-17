@@ -4,9 +4,9 @@ struct CreateOrganizationUser: AsyncMigration {
     func prepare(on database: Database) async throws {
         try await database.schema(OrganizationUser.schema)
             .id()
-            .field("user_id", .uuid, .references(User.schema, "id"), .required)
-            .field("organization_id", .uuid, .references(Organization.schema, "id"), .required)
-            .unique(on: "user_id", "organization_id")
+            .field(OrganizationUser.Columns.user.key, .uuid, .references(User.schema, "id"), .required)
+            .field(OrganizationUser.Columns.organization.key, .uuid, .references(Organization.schema, "id"), .required)
+            .unique(on: OrganizationUser.Columns.user.key, OrganizationUser.Columns.organization.key)
             .create()
     }
 
